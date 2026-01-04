@@ -28,7 +28,7 @@ getgenv().set = {
 
 	amp = {
 		toggle = false,
-		damage = 7
+		damage = 3
 	}
 }
 
@@ -87,9 +87,11 @@ local UpdateCamAim = function()
 					if not RightArm then continue end
 
 					local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
-					local lookat = Vector3.new(otherroot.Position.X, 0, otherroot.Position.Z) + direction
+					local lookat = Vector3.new(otherroot.Position.X, camera.CFrame.LookVector.Y, otherroot.Position.Z) + direction
 					local NewCFrame = CFrame.new(camera.CFrame.Position, lookat)
-					camera.CFrame = NewCFrame
+					
+					camera.CFrame = NewCFrame + Vector3.new(10, 0, 10)
+					camera.CFrame = NewCFrame + Vector3.new(-10, 0, -10)
 				end
 			end
 		end
@@ -146,6 +148,13 @@ local ampx = function()
 end
 
 RunService.Heartbeat:Connect(function()
-	UpdateCamAim()
-	ampx()
+	UpdateCamAim() ampx()
+	
+	local char = player.Character
+	local hrp = char and char:FindFirstChild("HumanoidRootPart")
+	local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+
+	if char and hrp and humanoid then
+		hrp.CFrame = hrp.CFrame + humanoid.MoveDirection * 0.01
+	end
 end)
