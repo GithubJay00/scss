@@ -1,5 +1,4 @@
 
-
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
@@ -22,6 +21,18 @@ local XZ = {
 
 local toggle = true
 
+
+local wiggleCam = function()
+	task.spawn(function()
+		
+		local strength = 5
+		
+		camera.CFrame.LookVector = camera.CFrame.LookVector + Vector3.new(strength, 0, strength)
+		task.wait(0.5)
+		camera.CFrame.LookVector = camera.CFrame.LookVector + Vector3.new(-strength, 0, -strength)
+	end)
+end
+
 local UpdateCamAim = function()
 	if not toggle then return end
 	
@@ -43,6 +54,9 @@ local UpdateCamAim = function()
 			
 			if not otherchar or not otherroot or not otherhum then continue end
 			
+			local pos = otherroot.Position
+			if pos.X >= XZ.minX and pos.X <= XZ.maxX and pos.Z >= XZ.minZ and pos.Z <= XZ.maxZ then continue end
+			
 			if otherhum.Health <= 0 then continue end
 			if humanoid.Health <= 0 then return end
 
@@ -58,6 +72,8 @@ local UpdateCamAim = function()
 					local NewCFrame = CFrame.new(camera.CFrame.Position, lookat)
 
 					camera.CFrame = NewCFrame
+				elseif distance <= 6 then 
+					wiggleCam()
 				end
 			end
 		end
