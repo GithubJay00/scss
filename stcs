@@ -41,7 +41,7 @@ local UpdateCamAim = function()
 			if otherroot then
 				local distance = (otherroot.Position - rootpart.Position).Magnitude
 				
-				if distance <= 5 then
+				if distance <= 15 then
 					local RightArm = otherchar and otherchar:FindFirstChild("Right Arm")
 					if not RightArm then continue end
 					
