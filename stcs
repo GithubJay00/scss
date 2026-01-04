@@ -53,7 +53,7 @@ local UpdateCamAim = function()
 					local RightArm = otherchar and otherchar:FindFirstChild("Right Arm")
 					if not RightArm then continue end
 					
-					local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
+					local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, -50, RightArm.Position.Z - otherroot.Position.Z).Unit
 					local NewCFrame = CFrame.new(camera.CFrame.Position, otherroot.Position + direction)
 
 					camera.CFrame = NewCFrame
