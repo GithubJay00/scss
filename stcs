@@ -23,7 +23,7 @@ setreadonly(MT, true)
 
 getgenv().set = {
 	aim = {
-		toggle = false,
+		toggle = true,
 		radius = 5,
 		wiggleSpeed = 5
 	},
