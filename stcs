@@ -1,0 +1,99 @@
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+local MT = getrawmetatable(game)
+local OldIndex = MT. __index
+local OldNamecall = MT.__namecall
+
+setreadonly(MT, false)
+MT.__index = newcclosure(function(P, M, TH, TI, HB, SZ)
+	if not checkcaller() and getnamecallmethod() then
+		if tostring(P) == "Position" and tostring(M) == "Magnitude" then return end
+		if tostring(HB) == "HumanoidRootPart" and tostring(SZ) == "Size" then return end
+		if tostring(TH) == "Handle" then return end
+		if tostring(TI) == "firetouchinterest" then return end
+	end
+	return OldIndex(P, M, TH, TI, HB, SZ)
+end)
+
+for _, v in next, getconnections(game:GetService("LogService").MessageOut) do v:Disable() end
+for _, v in next, getconnections(game:GetService("ScriptContext").Error) do v:Disable() end
+
+game:GetService("ScriptContext"):SetTimeout(0.1)
+setreadonly(MT, true)
+
+getgenv().set = {
+	aim = {
+		toggle = false,
+		radius = 5,
+		wiggleSpeed = 5
+	},
+	
+	amp = {
+		toggle = false,
+		hitall = false,
+		damage = 5
+	},
+	
+	hitbox = {
+		toggle = false,
+		transparency = 0.7,
+		size = 5
+	}
+}
+
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+local zone = workspace.Terrain.Spawn:FindFirstChild("SafePlate")
+local ZonePos = zone.Position
+local ZoneSize = zone.Size
+local area = Vector3.new(ZoneSize.X, 0, ZoneSize.Z) / 2
+
+local XZ = {
+	minX = ZonePos.X - area.X,
+	maxX = ZonePos.X + area.X,
+	minZ = ZonePos.Z - area.Z,
+	maxZ = ZonePos.Z + area.Z
+}
+
+
+local UpdateCamAim = function()
+	if not set.aim.toggle then return end
+	
+	local character = player.Character
+	local rootpart = character and character:FindFirstChild("HumanoidRootPart")
+	if not character or not rootpart then return end
+	
+	local position = rootpart.Position
+	if position.X >= XZ.minX and position.X <= XZ.maxX and position.Z >= XZ.minZ and position.Z <= XZ.maxZ then print("in zone") return end
+	
+	for _, Player in pairs(Players:GetPlayers()) do
+		if Player.Name == player.Name then return end
+		
+		local otherchar = Player.Character
+		local otherroot = otherchar and otherchar:FindFirstChild("HumanoidRootPart")
+		
+		local RightArm = otherchar and otherchar:FindFirstChild("Right Arm")
+		if not otherchar or not otherroot or not RightArm then return end
+		
+		local distance = otherroot and (otherroot.Position - rootpart.Position).Magnitude
+		if distance > set.aim.radius then return end
+		
+		local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
+		local NewCFrame = CFrame.new(camera.Position, rootpart.Position + direction)
+		
+		task.spawn(function()
+			for _ = 0, 1, 0.01 do
+				camera.CFrame = camera.CFrame:Lerp(NewCFrame, 1)
+			end
+			task.wait()
+		end)
+	end
+end
+
+RunService.Heartbeat:Connect(function()
+	UpdateCamAim()
+end)
