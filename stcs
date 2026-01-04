@@ -56,7 +56,7 @@ local UpdateCamAim = function()
 		
 		local RightArm = otherchar and otherchar:FindFirstChild("Right Arm")
 		if not otherchar or not otherroot or not RightArm then return end
-		print("eee")
+		print("eee") 
 		local distance = (otherroot.Position - rootpart.Position).Magnitude
 		print("ee")
 		
