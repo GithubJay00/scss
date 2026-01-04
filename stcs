@@ -40,6 +40,7 @@ local XZ = {
 
 local UpdateCamAim = function()
 	if not set.aim.toggle then return end
+	print(set.aim.toggle)
 	
 	local character = player.Character
 	local rootpart = character and character:FindFirstChild("HumanoidRootPart")
@@ -50,13 +51,13 @@ local UpdateCamAim = function()
 	
 	for _, Player in pairs(Players:GetPlayers()) do
 		if Player.Name == player.Name then return end
-		
+		print("eeeeee")
 		local otherchar = Player.Character
 		local otherroot = otherchar and otherchar:FindFirstChild("HumanoidRootPart")
-		
+		print("eeee")
 		local RightArm = otherchar and otherchar:FindFirstChild("Right Arm")
 		if not otherchar or not otherroot or not RightArm then return end
-		print("eee") 
+		print("eee")
 		local distance = (otherroot.Position - rootpart.Position).Magnitude
 		print("ee")
 		
