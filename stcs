@@ -25,7 +25,7 @@ local toggle = true
 local wiggleCam = function()
 	task.spawn(function()
 		
-		local strength = 5
+		local strength = 10
 		
 		camera.CFrame.LookVector = camera.CFrame.LookVector + Vector3.new(strength, 0, strength)
 		task.wait(0.5)
@@ -72,7 +72,6 @@ local UpdateCamAim = function()
 					local NewCFrame = CFrame.new(camera.CFrame.Position, lookat)
 
 					camera.CFrame = NewCFrame
-				elseif distance <= 6 then 
 					wiggleCam()
 				end
 			end
