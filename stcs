@@ -73,25 +73,17 @@ local UpdateCamAim = function()
 	for _, Player in pairs(Players:GetPlayers()) do
 		if Player.Name ~= player.Name then
 			
-			print("eeeeee")
-			
 			local otherchar = Player.Character
 			local otherroot = otherchar and otherchar:FindFirstChild("HumanoidRootPart")
-			
-			print("eeee")
 			
 			local RightArm = otherchar and otherchar:FindFirstChild("Right Arm")
 			--if not otherchar or not otherroot or not RightArm then return end
 			
-			print("eee")
-			
 			local distance = (otherroot.Position - rootpart.Position).Magnitude
-			
-			print("ee")
 
 			if distance <= 5 then 
 				local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
-				local NewCFrame = CFrame.new(camera.Position, rootpart.Position + direction)
+				local NewCFrame = CFrame.new(camera.CFrame.Position, rootpart.Position + direction)
 				
 				print("runnin")
 
