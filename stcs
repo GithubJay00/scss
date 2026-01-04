@@ -1,3 +1,4 @@
+
 getgenv().set = {
 	aim = {
 		toggle = true,
@@ -55,8 +56,8 @@ local UpdateCamAim = function()
 		
 		local RightArm = otherchar and otherchar:FindFirstChild("Right Arm")
 		if not otherchar or not otherroot or not RightArm then return end
-		
-		local distance = otherroot and (otherroot.Position - rootpart.Position).Magnitude
+		print("eee")
+		local distance = (otherroot.Position - rootpart.Position).Magnitude
 		print("ee")
 		
 		if distance <= set.aim.radius then 
