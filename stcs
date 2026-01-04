@@ -1,26 +1,3 @@
---[[if not game:IsLoaded() then game.Loaded:Wait() end
-
-local MT = getrawmetatable(game)
-local OldIndex = MT. __index
-local OldNamecall = MT.__namecall
-
-setreadonly(MT, false)
-MT.__index = newcclosure(function(P, M, TH, TI, HB, SZ)
-	if not checkcaller() and getnamecallmethod() then
-		if tostring(P) == "Position" and tostring(M) == "Magnitude" then return end
-		if tostring(HB) == "HumanoidRootPart" and tostring(SZ) == "Size" then return end
-		if tostring(TH) == "Handle" then return end
-		if tostring(TI) == "firetouchinterest" then return end
-	end
-	return OldIndex(P, M, TH, TI, HB, SZ)
-end)
-
-for _, v in next, getconnections(game:GetService("LogService").MessageOut) do v:Disable() end
-for _, v in next, getconnections(game:GetService("ScriptContext").Error) do v:Disable() end
-
-game:GetService("ScriptContext"):SetTimeout(0.1)
-setreadonly(MT, true)]]
-
 getgenv().set = {
 	aim = {
 		toggle = true,
@@ -80,17 +57,12 @@ local UpdateCamAim = function()
 		if not otherchar or not otherroot or not RightArm then return end
 		
 		local distance = otherroot and (otherroot.Position - rootpart.Position).Magnitude
+		print("ee")
 		
 		if distance <= set.aim.radius then 
 			local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
 			local NewCFrame = CFrame.new(camera.Position, rootpart.Position + direction)
 			print("runnin")
-			--[[task.spawn(function()
-				for _ = 0, 1, 0.01 do
-					camera.CFrame = camera.CFrame:Lerp(NewCFrame, 1)
-				end
-				task.wait()
-			end)]]
 			
 			camera.CFrame = NewCFrame
 		end
