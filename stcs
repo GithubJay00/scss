@@ -80,17 +80,20 @@ local UpdateCamAim = function()
 		if not otherchar or not otherroot or not RightArm then return end
 		
 		local distance = otherroot and (otherroot.Position - rootpart.Position).Magnitude
-		if distance > set.aim.radius then return end
 		
-		local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
-		local NewCFrame = CFrame.new(camera.Position, rootpart.Position + direction)
-		
-		task.spawn(function()
-			for _ = 0, 1, 0.01 do
-				camera.CFrame = camera.CFrame:Lerp(NewCFrame, 1)
-			end
-			task.wait()
-		end)
+		if distance <= set.aim.radius then 
+			local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
+			local NewCFrame = CFrame.new(camera.Position, rootpart.Position + direction)
+
+			--[[task.spawn(function()
+				for _ = 0, 1, 0.01 do
+					camera.CFrame = camera.CFrame:Lerp(NewCFrame, 1)
+				end
+				task.wait()
+			end)]]
+			
+			camera.CFrame = NewCFrame
+		end
 	end
 end
 
