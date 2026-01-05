@@ -149,12 +149,4 @@ end
 
 RunService.Heartbeat:Connect(function()
 	UpdateCamAim() ampx()
-	
-	local char = player.Character
-	local hrp = char and char:FindFirstChild("HumanoidRootPart")
-	local humanoid = char and char:FindFirstChildOfClass("Humanoid")
-
-	if char and hrp and humanoid then
-		hrp.CFrame = hrp.CFrame + humanoid.MoveDirection * 0.01
-	end
 end)
