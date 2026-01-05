@@ -1,10 +1,11 @@
 if not game:IsLoaded() then game.Loaded:Wait() end
-
 local MT = getrawmetatable(game)
+
 local OldIndex = MT. __index
 local OldNamecall = MT.__namecall
 
 setreadonly(MT, false)
+
 MT.__index = newcclosure(function(P, M, TH, TI, HB, SZ)
 	if not checkcaller() and getnamecallmethod() then
 		if tostring(P) == "Position" and tostring(M) == "Magnitude" then return end
@@ -18,17 +19,19 @@ end)
 for _, v in next, getconnections(game:GetService("LogService").MessageOut) do v:Disable() end
 for _, v in next, getconnections(game:GetService("ScriptContext").Error) do v:Disable() end
 game:GetService("ScriptContext"):SetTimeout(0.1)
+
 setreadonly(MT, true)
+
 
 getgenv().set = {
 	aim = {
 		toggle = true,
-		radius = 15
+		radius = 10
 	},
 
 	amp = {
 		toggle = true,
-		damage = 3
+		damage = 1
 	}
 }
 
@@ -90,8 +93,13 @@ local UpdateCamAim = function()
 					local lookat = Vector3.new(otherroot.Position.X, camera.CFrame.LookVector.Y, otherroot.Position.Z) + direction
 					local NewCFrame = CFrame.new(camera.CFrame.Position, lookat)
 					
-					camera.CFrame = NewCFrame + Vector3.new(10, 0, 10)
-					camera.CFrame = NewCFrame + Vector3.new(-10, 0, -10)
+					task.spawn(function()
+						if distance <= 6.5 then
+							camera.CFrame.LookVector.X = camera.CFrame.LookVector.X + 3
+							task.wait(0.5)
+							camera.CFrame.LookVector.X = camera.CFrame.LookVector.X - 3
+						end
+					end)
 				end
 			end
 		end
@@ -149,4 +157,12 @@ end
 
 RunService.Heartbeat:Connect(function()
 	UpdateCamAim() ampx()
+	
+	local char = player.Character
+	local hrp = char and char:FindFirstChild("HumanoidRootPart")
+	local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+
+	if char and hrp and humanoid then
+		hrp.CFrame = hrp.CFrame + humanoid.MoveDirection * 0.005
+	end
 end)
