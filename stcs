@@ -94,11 +94,11 @@ local UpdateCamAim = function()
 					local NewCFrame = CFrame.new(camera.CFrame.Position, lookat)
 					
 					task.spawn(function()
-						if distance <= 6.5 then
+						--if distance <= 6.5 then
 							camera.CFrame.LookVector.X = camera.CFrame.LookVector.X + 3
 							task.wait(0.5)
 							camera.CFrame.LookVector.X = camera.CFrame.LookVector.X - 3
-						end
+						--end
 					end)
 				end
 			end
