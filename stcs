@@ -27,7 +27,7 @@ getgenv().set = {
 	},
 
 	amp = {
-		toggle = false,
+		toggle = true,
 		damage = 3
 	}
 }
