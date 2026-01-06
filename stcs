@@ -41,6 +41,9 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local camera = workspace.CurrentCamera
 
+local lastDamageTick = 0
+local DamageTickCooldown = 0.1
+
 local zone = workspace.Terrain.Spawn:FindFirstChild("SafePlate")
 if not zone then return end
 
@@ -95,14 +98,13 @@ local UpdateCamAim = function()
 					
 					camera.CFrame = NewCFrame
 					
-					local strength = math.random(1, 3)
+				elseif distance <= 6.5 then
+					local strength = math.random(1, 5)
 					
 					task.spawn(function()
-						if distance <= 6.5 then
-							camera.CFrame = camera.CFrame + CFrame.new(Vector3.new(0, 0, 0), Vector3.new(strength, 0, 0))
-							task.wait(0.5)
-							camera.CFrame = camera.CFrame - CFrame.new(Vector3.new(0, 0, 0), Vector3.new(strength, 0, 0))
-						end
+						camera.CFrame = camera.CFrame + CFrame.new(Vector3.new(0, 0, 0), Vector3.new(strength, 0, 0))
+						task.wait(0.5)
+						camera.CFrame = camera.CFrame - CFrame.new(Vector3.new(0, 0, 0), Vector3.new(strength, 0, 0))
 					end)
 				end
 			end
@@ -147,8 +149,11 @@ local ampx = function()
 						
 						local TargetChar = hit.Parent
 						if TargetChar == Char then return end 
+						
+						local CurrentTime = tick()
+						if CurrentTime - lastDamageTick < DamageTickCooldown then return end	-- < Damage ticking cooldown
 
-						for _ = 1, set.amp.damage do
+						for _ = 1, set.amp.damage do -- < ticks per cooldown
 							firetouchinterest(hit, Handle, 0)
 							firetouchinterest(hit, Handle, 1)
 						end
@@ -161,12 +166,4 @@ end
 
 RunService.Heartbeat:Connect(function()
 	UpdateCamAim() ampx()
-	
-	local char = player.Character
-	local hrp = char and char:FindFirstChild("HumanoidRootPart")
-	local humanoid = char and char:FindFirstChildOfClass("Humanoid")
-
-	if char and hrp and humanoid then
-		hrp.CFrame = hrp.CFrame + humanoid.MoveDirection * 0.005
-	end
 end)
