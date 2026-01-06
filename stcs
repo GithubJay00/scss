@@ -98,13 +98,12 @@ local UpdateCamAim = function()
 					
 					camera.CFrame = NewCFrame
 					
-				elseif distance <= 6.5 then
-					local strength = math.random(1, 5)
-					
+				elseif distance <= 3 then
 					task.spawn(function()
-						camera.CFrame = camera.CFrame + CFrame.new(Vector3.new(0, 0, 0), Vector3.new(strength, 0, 0))
-						task.wait(0.5)
-						camera.CFrame = camera.CFrame - CFrame.new(Vector3.new(0, 0, 0), Vector3.new(strength, 0, 0))
+						local angle = math.sin(1 * 1) * 1
+						camera.CFrame = camera.CFrame * CFrame.Angles(0, angle, 0)
+						task.wait(0.01)
+						camera.CFrame = camera.CFrame * CFrame.Angles(0, -angle, 0)
 					end)
 				end
 			end
