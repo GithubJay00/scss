@@ -172,6 +172,9 @@ local jump = function()
 	local humanoid = character and character:FindFirstChild("Humanoid")
 
 	if not character or not rootpart or not humanoid then return end
+	
+	local position = rootpart.Position
+	if position.X >= XZ.minX and position.X <= XZ.maxX and position.Z >= XZ.minZ and position.Z <= XZ.maxZ then return end
 
 	local CurrentTime = tick()
 	if CurrentTime - LastJumpTime < JumpCooldown then return end
