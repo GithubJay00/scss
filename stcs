@@ -166,8 +166,12 @@ local UpdateCamAim = function()
 end
 
 local jump = function()
+	
 	local character = player.Character
-	if not character or not character:FindFirstChild("HumanoidRootPart") or not character:FindFirstChild("Humanoid") then return end
+	local rootpart = character and character:FindFirstChild("HumanoidRootPart")
+	local humanoid = character and character:FindFirstChild("Humanoid")
+
+	if not character or not rootpart or not humanoid then return end
 
 	local CurrentTime = tick()
 	if CurrentTime - LastJumpTime < JumpCooldown then return end
@@ -176,9 +180,18 @@ local jump = function()
 
 	for _, Player in ipairs(Players:GetPlayers()) do
 		if Player ~= player and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Humanoid").Jump then
-			local Distance = (character.HumanoidRootPart.Position - Player.Character.HumanoidRootPart.Position).Magnitude
+			
+			local otherchar = Player.Character
+			local otherroot = otherchar and otherchar:FindFirstChild("HumanoidRootPart")
+
+			if not otherchar or not otherroot then continue end
+			
+			local pos = otherroot.Position
+			if pos.X >= XZ.minX and pos.X <= XZ.maxX and pos.Z >= XZ.minZ and pos.Z <= XZ.maxZ then continue end
+			
+			local Distance = (rootpart.Position - otherroot.Position).Magnitude
 			if Distance < ClosestDistance then
-				character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+				humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 				LastJumpTime = CurrentTime
 				break
 			end
