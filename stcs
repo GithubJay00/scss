@@ -186,11 +186,15 @@ local jump = function()
 			
 			local otherchar = Player.Character
 			local otherroot = otherchar and otherchar:FindFirstChild("HumanoidRootPart")
+			local otherhum = otherchar and otherchar:FindFirstChild("Humanoid")
 
-			if not otherchar or not otherroot then continue end
+			if not otherchar or not otherroot or not otherhum then continue end
 			
 			local pos = otherroot.Position
 			if pos.X >= XZ.minX and pos.X <= XZ.maxX and pos.Z >= XZ.minZ and pos.Z <= XZ.maxZ then continue end
+			
+			if otherhum.Health <= 0 then continue end
+			if humanoid.Health <= 0 then return end
 			
 			local Distance = (rootpart.Position - otherroot.Position).Magnitude
 			if Distance < ClosestDistance then
