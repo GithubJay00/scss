@@ -34,7 +34,7 @@ getgenv().set = {
 	
 	jump = {
 		toggle = true,
-		radius = 10
+		radius = 20
 	},
 
 	amp = {
@@ -152,7 +152,7 @@ local UpdateCamAim = function()
 					
 					camera.CFrame = NewCFrame
 					
-				elseif distance <= 3 then
+				elseif distance <= 5 then
 					task.spawn(function()
 						local angle = math.sin(1 * 1) * 1
 						camera.CFrame = camera.CFrame * CFrame.Angles(0, angle, 0)
