@@ -92,7 +92,7 @@ local wiggle = function()
 			if otherroot then
 				local distance = (otherroot.Position - rootpart.Position).Magnitude
 
-				if distance <= 3.5 then
+				if distance <= 4.5 then
 					task.spawn(function()
 						local angle = math.sin(1 * 1) * 1
 						camera.CFrame = camera.CFrame * CFrame.Angles(0, angle, 0)
