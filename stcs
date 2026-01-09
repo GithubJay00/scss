@@ -35,7 +35,7 @@ getgenv().set = {
 
 	amp = {
 		toggle = true,
-		damage = 1
+		damage = 2
 	}
 }
 
@@ -92,7 +92,7 @@ local wiggle = function()
 			if otherroot then
 				local distance = (otherroot.Position - rootpart.Position).Magnitude
 
-				if distance <= 4.5 then
+				if distance <= 4 then
 					task.spawn(function()
 						local angle = math.sin(1 * 1) * 1
 						camera.CFrame = camera.CFrame * CFrame.Angles(0, angle, 0)
@@ -142,7 +142,16 @@ local UpdateCamAim = function()
 					local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
 					local lookat = Vector3.new(otherroot.Position.X, camera.CFrame.LookVector.Y, otherroot.Position.Z) + direction
 					local NewCFrame = CFrame.new(camera.CFrame.Position, lookat)
+					
 					camera.CFrame = NewCFrame
+					
+				elseif distance <= 4 then
+					task.spawn(function()
+						local angle = math.sin(1 * 1) * 1
+						camera.CFrame = camera.CFrame * CFrame.Angles(0, angle, 0)
+						task.wait(0.01)
+						camera.CFrame = camera.CFrame * CFrame.Angles(0, -angle, 0)
+					end)
 				end
 			end
 		end
