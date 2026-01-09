@@ -29,12 +29,8 @@ setreadonly(MT, true)
 getgenv().set = {
 	aim = {
 		toggle = true,
+		wiggle = true,
 		radius = 10
-	},
-	
-	jump = {
-		toggle = true,
-		radius = 20
 	},
 
 	amp = {
@@ -52,9 +48,6 @@ local camera = workspace.CurrentCamera
 local lastDamageTick = 0
 local DamageTickCooldown = 0.1
 
-local LastJumpTime = 0
-local JumpCooldown = 0.6
-
 local zone = workspace.Terrain.Spawn:FindFirstChild("SafePlate")
 if not zone then return end
 
@@ -70,7 +63,7 @@ local XZ = {
 }
 
 local wiggle = function()
-	if not set.aim.toggle then return end
+	if not set.aim.wiggle then return end
 
 	local character = player.Character
 	local rootpart = character and character:FindFirstChild("HumanoidRootPart")
@@ -99,7 +92,7 @@ local wiggle = function()
 			if otherroot then
 				local distance = (otherroot.Position - rootpart.Position).Magnitude
 
-				if distance <= 5 then
+				if distance <= 3.5 then
 					task.spawn(function()
 						local angle = math.sin(1 * 1) * 1
 						camera.CFrame = camera.CFrame * CFrame.Angles(0, angle, 0)
@@ -149,58 +142,8 @@ local UpdateCamAim = function()
 					local direction = Vector3.new(RightArm.Position.X - otherroot.Position.X, 0, RightArm.Position.Z - otherroot.Position.Z).Unit
 					local lookat = Vector3.new(otherroot.Position.X, camera.CFrame.LookVector.Y, otherroot.Position.Z) + direction
 					local NewCFrame = CFrame.new(camera.CFrame.Position, lookat)
-					
 					camera.CFrame = NewCFrame
-					
-				elseif distance <= 5 then
-					task.spawn(function()
-						local angle = math.sin(1 * 1) * 1
-						camera.CFrame = camera.CFrame * CFrame.Angles(0, angle, 0)
-						task.wait(0.01)
-						camera.CFrame = camera.CFrame * CFrame.Angles(0, -angle, 0)
-					end)
 				end
-			end
-		end
-	end
-end
-
-local jump = function()
-	
-	local character = player.Character
-	local rootpart = character and character:FindFirstChild("HumanoidRootPart")
-	local humanoid = character and character:FindFirstChild("Humanoid")
-
-	if not character or not rootpart or not humanoid then return end
-	
-	local position = rootpart.Position
-	if position.X >= XZ.minX and position.X <= XZ.maxX and position.Z >= XZ.minZ and position.Z <= XZ.maxZ then return end
-
-	local CurrentTime = tick()
-	if CurrentTime - LastJumpTime < JumpCooldown then return end
-
-	local ClosestDistance = set.jump.radius
-
-	for _, Player in ipairs(Players:GetPlayers()) do
-		if Player ~= player and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Humanoid").Jump then
-			
-			local otherchar = Player.Character
-			local otherroot = otherchar and otherchar:FindFirstChild("HumanoidRootPart")
-			local otherhum = otherchar and otherchar:FindFirstChild("Humanoid")
-
-			if not otherchar or not otherroot or not otherhum then continue end
-			
-			local pos = otherroot.Position
-			if pos.X >= XZ.minX and pos.X <= XZ.maxX and pos.Z >= XZ.minZ and pos.Z <= XZ.maxZ then continue end
-			
-			if otherhum.Health <= 0 then continue end
-			if humanoid.Health <= 0 then return end
-			
-			local Distance = (rootpart.Position - otherroot.Position).Magnitude
-			if Distance < ClosestDistance then
-				humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-				LastJumpTime = CurrentTime
-				break
 			end
 		end
 	end
@@ -259,8 +202,5 @@ local amp = function()
 end
 
 RunService.Heartbeat:Connect(function()
-	amp() jump()
-end)
-RunService.Stepped:Connect(function()
-	UpdateCamAim() wiggle()
+	amp() UpdateCamAim() wiggle()
 end)
