@@ -39,8 +39,8 @@ getgenv().set = {
 	
 	hitbox = {
 		toggle = true,
-		visible = true,
-		size = Vector3.new(2.7, 2, 1.8)
+		visible = false,
+		size = Vector3.new(2.2, 2, 2)
 	}
 }
 
