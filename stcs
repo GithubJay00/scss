@@ -28,13 +28,19 @@ setreadonly(MT, true)
 
 getgenv().set = {
 	aim = {
-		toggle = true,
+		toggle = false,
 		radius = 10
 	},
 
 	amp = {
 		toggle = true,
 		damage = 2
+	},
+	
+	hitbox = {
+		toggle = true,
+		visible = true,
+		size = Vector3.new(3, 2.5, 2.2)
 	}
 }
 
@@ -61,7 +67,7 @@ local XZ = {
 	maxZ = ZonePos.Z + area.Z
 }
 
-local UpdateCamAim = function()
+getgenv().UpdateCamAim = function()
 	if not set.aim.toggle then return end
 
 	local character = player.Character
@@ -114,7 +120,7 @@ local UpdateCamAim = function()
 	end
 end
 
-local amp = function()
+getgenv().amp = function()
 	if not set.amp.toggle then return end
 
 	local Char = player.Character
@@ -126,10 +132,10 @@ local amp = function()
 	local position = Rootpart.Position
 	if position.X >= XZ.minX and position.X <= XZ.maxX and position.Z >= XZ.minZ and position.Z <= XZ.maxZ then return end
 
-	for _, others in pairs(Players:GetPlayers()) do
-		if others.Name ~= player.Name then
+	for _, Player in pairs(Players:GetPlayers()) do
+		if Player.Name ~= player.Name then
 
-			local othersChar = others.Character
+			local othersChar = Player.Character
 			local othersRootpart = othersChar and othersChar:FindFirstChild("HumanoidRootPart")
 			local othersHumanoid = othersChar and othersChar:FindFirstChildOfClass("Humanoid")
 
@@ -166,6 +172,57 @@ local amp = function()
 	end
 end
 
+getgenv().hitbox = function()
+	if set.hitbox.toggle then
+		for _, Player in pairs(Players:GetPlayers()) do
+			if Player.Name ~= player.Name then
+				pcall(function()
+					local othersChar = Player.Character
+					local othersRoot = othersChar and othersChar:FindFirstChild("HumanoidRootPart")
+					othersRoot.Size = set.hitbox.size
+					othersRoot.CanCollide = false
+					othersRoot.Shape = "Ball"
+				end)
+			end
+		end
+	else
+		for _, Player in pairs(Players:GetPlayers()) do
+			if Player.Name ~= player.Name then
+				pcall(function()
+					local othersChar = Player.Character
+					local othersRoot = othersChar and othersChar:FindFirstChild("HumanoidRootPart")
+					othersRoot.Size = Vector3.new(2, 2, 1)
+					othersRoot.CanCollide = false
+					othersRoot.Shape = "Block"
+				end)
+			end
+		end
+	end
+
+	if set.hitbox.visible then
+		for _, Player in pairs(Players:GetPlayers()) do
+			if Player.Name ~= player.Name then
+				pcall(function()
+					local othersChar = Player.Character
+					local othersRoot = othersChar and othersChar:FindFirstChild("HumanoidRootPart")
+					othersRoot.Color = Color3.fromRGB(0, 0, 0)
+					othersRoot.Transparency = 0.7
+				end)
+			end
+		end
+	else
+		for _, Player in pairs(Players:GetPlayers()) do
+			if Player.Name ~= player.Name then
+				pcall(function()
+					local othersChar = Player.Character
+					local othersRoot = othersChar and othersChar:FindFirstChild("HumanoidRootPart")
+					othersRoot.Transparency = 1
+				end)
+			end
+		end
+	end
+end
+
 RunService.Heartbeat:Connect(function()
-	amp() UpdateCamAim()
+	UpdateCamAim() hitbox() amp()
 end)
