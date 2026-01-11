@@ -40,7 +40,7 @@ getgenv().set = {
 	hitbox = {
 		toggle = true,
 		visible = false,
-		size = Vector3.new(2.2, 2, 2)
+		size = Vector3.new(2.5, 2.5, 2.2)
 	}
 }
 
@@ -51,7 +51,7 @@ local player = Players.LocalPlayer
 local camera = workspace.CurrentCamera
 
 local lastDamageTick = 0
-local DamageTickCooldown = 0.3
+local DamageTickCooldown = 0.35
 
 local zone = workspace.Terrain.Spawn:FindFirstChild("SafePlate")
 if not zone then return end
