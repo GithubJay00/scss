@@ -34,7 +34,7 @@ getgenv().set = {
 
 	amp = {
 		toggle = true,
-		damage = 2
+		damage = 1
 	},
 	
 	hitbox = {
@@ -51,7 +51,7 @@ local player = Players.LocalPlayer
 local camera = workspace.CurrentCamera
 
 local lastDamageTick = 0
-local DamageTickCooldown = 0.1
+local DamageTickCooldown = 0.3
 
 local zone = workspace.Terrain.Spawn:FindFirstChild("SafePlate")
 if not zone then return end
@@ -156,14 +156,18 @@ getgenv().amp = function()
 					if hit:IsA("BasePart") then
 
 						local TargetChar = hit.Parent
-						if TargetChar == Char then return end 
+						if TargetChar == Char then continue end 
+						
+						local TargetTorso = TargetChar and TargetChar:FindFirstChild("Torso")
+						local TargetRightArm = TargetChar and TargetChar:FindFirstChild("Right Arm")
+						if not TargetTorso or not TargetRightArm then continue end
 
 						local CurrentTime = tick()
 						if CurrentTime - lastDamageTick < DamageTickCooldown then return end	-- < Damage ticking cooldown
-
+						
 						for _ = 1, set.amp.damage do -- < ticks per cooldown
-							firetouchinterest(hit, Handle, 0)
-							firetouchinterest(hit, Handle, 1)
+							firetouchinterest(TargetTorso, Handle, 0) firetouchinterest(TargetRightArm, Handle, 0)
+							firetouchinterest(TargetTorso, Handle, 1) firetouchinterest(TargetRightArm, Handle, 1)
 						end
 					end
 				end
